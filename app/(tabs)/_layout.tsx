@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontAwesome, AntDesign } from '@expo/vector-icons';
+import { FontAwesome, AntDesign, Ionicons  } from '@expo/vector-icons';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
@@ -29,8 +29,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Agendamentos',
+          tabBarIcon: ({ color }) => <Ionicons name="calendar-number-outline" size={24} color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -50,8 +50,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="appointments"
         options={{
-          title: 'Agendamentos',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Formulários',
+          tabBarIcon: ({ color }) => <Ionicons name="clipboard-outline" size={24} color={color} />,
           headerRight: () => (
             <Link href="/modalAppointments" asChild>
               <Pressable>
