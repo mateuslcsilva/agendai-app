@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, ScrollView, TouchableNativeFeedback, ToastAndroid } from 'react-native';
+import { Platform, StyleSheet, ScrollView, TouchableNativeFeedback, ToastAndroid, TextInput } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
@@ -35,60 +35,75 @@ const reducer = (state: initialState, action: action) => {
 };
 
 export default function ModalScreen() {
-	const [question, setQuestion] = useState<string>('');
+	const [formId, setFormId] = useState<number | null>(null);
+	const [formName, setFormName] = useState('');
+	const [question, setQuestion] = useState('');
 	const [fieldType, setFieldType] = useState<'short' | 'long'>('short');
-	const [appointments, setAppointments] = useState([] as initialState[]);
+	const [questions, setQuestions] = useState([] as initialState[]);
+
+	/* 	useEffect(() => {
+			console.log(question, fieldType);
+		}, [question, fieldType]) */
 
 	useEffect(() => {
-		console.log(question, fieldType);
-	}, [question, fieldType])
-
-	useEffect(() => {
-		console.log(appointments);
-	}, [appointments])
+		console.log(questions);
+	}, [questions])
 
 	/* 	const updateFieldValue = (field : string) => (event : any) => {
 			dispatch({ type: "updateFieldValue", field, value: event.target.value });
 		}; */
 
 	const addInputField = () => {
-		setAppointments([...appointments, { question: question, type: fieldType }]);
+		setQuestions([...questions, { question: question, type: fieldType }]);
 		setQuestion("");
 		setFieldType('short');
 	}
 
-	const saveform = async () => {
+	const saveForm = async () => {
 		ToastAndroid.show('Formulário salvo com sucesso!!', ToastAndroid.LONG);
-		router.push('/appointments');
-		return;
+		/* router.push('/appointments'); */
+		const data = {
+			form_name: formName,
+			questions: questions
+		}
 		const requestOptions = {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(appointments)
-        };
-        try {
-            await fetch(`https://url/saveAppointment`, requestOptions)
-                .then(res => res.json())
-                .then(async res => {
-					router.push('/')
-                })
-                .catch(erro => {
-                });
-
-        } catch (e) {
-			console.log(e)
-        }
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		};
+		console.log(data)
+		return;
+		await fetch(`http://127.0.0.1:3000/getAppointments`)
+			.then(res => res.json())
+			.then(res => {
+				console.log(res)
+				/* router.push('/'); */
+			})
+			.catch(error => {
+				console.log(error)
+			});
 	}
 
 	return (
 		<ScrollView style={{ flex: 1, backgroundColor: Colors.lightThemeBackground.backgroundColor }}>
 			<View style={styles.container}>
 				<Text style={{ color: Colors.primaryFontColor.color, fontSize: 16 }}>As perguntar sobre usuário são automáticamente incluídas nos formulários</Text>
+
+				<View style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+					<Text style={ [globalStyles.title, { color: '#3c3c3c' }] }>
+						Nome do formulário
+					</Text>
+					<TextInput
+						cursorColor={Colors.primaryFontLightColor.color}
+						style={globalStyles.input}
+						value={formName}
+						onChangeText={setFormName}
+					/>
+				</View>
 				<View style={{ marginTop: 20 }}>
-					{appointments.map((item, index) => (
+					{questions.map((item, index) => (
 						<View key={index} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 							<View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12 }}>
 								<Text style={styles.title}>{++index}.</Text>
@@ -102,9 +117,9 @@ export default function ModalScreen() {
 					<NewAppointment question={question} setQuestion={setQuestion} fieldType={fieldType} setFieldType={setFieldType} saveField={() => addInputField()} />
 				</View>
 				<StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-				<TouchableNativeFeedback onPress={saveform}>
+				<TouchableNativeFeedback onPress={saveForm}>
 					<Text
-						style={[ globalStyles.button, { marginLeft: 0 } ]}>
+						style={[globalStyles.button, { marginLeft: 0 }]}>
 						Salvar formulário!
 					</Text>
 				</TouchableNativeFeedback>
