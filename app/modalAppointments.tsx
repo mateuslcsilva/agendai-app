@@ -60,8 +60,6 @@ export default function ModalScreen() {
 	}
 
 	const saveForm = async () => {
-		ToastAndroid.show('Formulário salvo com sucesso!!', ToastAndroid.LONG);
-		/* router.push('/appointments'); */
 		const data = {
 			form_name: formName,
 			questions: questions
@@ -75,11 +73,15 @@ export default function ModalScreen() {
 		};
 		console.log(data)
 		return;
-		await fetch(`http://127.0.0.1:3000/getAppointments`)
+		await fetch(`http://127.0.0.1:3000/getAppointments`, requestOptions)
 			.then(res => res.json())
 			.then(res => {
 				console.log(res)
-				/* router.push('/'); */
+				ToastAndroid.show(
+					'Formulário salvo com sucesso!!', 
+					ToastAndroid.LONG
+				);
+				router.push('/appointments');
 			})
 			.catch(error => {
 				console.log(error)
