@@ -52,7 +52,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ title: 'Info', presentation: 'modal' }} />
-        <Stack.Screen name="modalAppointments" options={{ title: 'Novo formulário', presentation: 'modal' }} />
+        <Stack.Screen name="modalAppointmentForm" options={{ title: 'Novo formulário', presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
   );

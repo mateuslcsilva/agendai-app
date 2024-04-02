@@ -81,7 +81,7 @@ export default function ModalScreen() {
 					'Formulário salvo com sucesso!!', 
 					ToastAndroid.LONG
 				);
-				router.push('/appointments');
+				router.push('/appointmentForms');
 			})
 			.catch(error => {
 				console.log(error)

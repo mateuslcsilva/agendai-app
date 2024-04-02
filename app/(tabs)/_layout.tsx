@@ -48,12 +48,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="appointments"
+        name="appointmentForms"
         options={{
           title: 'Formulários',
           tabBarIcon: ({ color }) => <Ionicons name="clipboard-outline" size={24} color={color} />,
           headerRight: () => (
-            <Link href="/modalAppointments" asChild>
+            <Link href="/modalAppointmentForm" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <AntDesign 
