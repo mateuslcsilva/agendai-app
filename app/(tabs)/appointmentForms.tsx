@@ -6,7 +6,7 @@ import Colors from '@/constants/Colors';
 import { styles as globalStyles } from '@/styles/styles';
 import { Entypo } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { Link } from 'expo-router';
+import { Link, Redirect, router, useLocalSearchParams } from 'expo-router';
 
 //const mockupData = [{ "id": 1, "created_at": "2024-03-23T03:00:00.000Z", "form_name": 'form name', "numberOfQuestions": 0 }, { "id": 2, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 3, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 4, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 5, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 6, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 7, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 8, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 9, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 10, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 1 }, { "id": 11, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 1 }, { "id": 12, "created_at": "2024-03-23T16:33:03.000Z", "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 13, "created_at": "2024-03-23T16:33:57.000Z", "form_name": "teste nome form", "numberOfQuestions": 3 }];
 
@@ -18,7 +18,18 @@ interface AppointmentForm{
 }
 
 export default function TabTwoScreen() {
+	const post = useLocalSearchParams();
 	const [forms, setForms] = useState<Array<AppointmentForm>>([] as Array<AppointmentForm>);
+
+/* 	useEffect(() => {
+		const getInfo = async() => {
+			await getAppointmentForms();
+		}
+		if(post?.update == 'true'){
+			router.setParams({update: 'false'})
+			getInfo();
+		}
+	}, [post]) */
 
 	useEffect(() => {
 		const getInfo = async() => {
@@ -28,7 +39,6 @@ export default function TabTwoScreen() {
 	}, [])
 
 	const getAppointmentForms = async() => {
-	
 		await fetch(`https://lcsilva.cloud/getAppointmentForms`) 
 		.then(res => res.json())
 		.then(async (res) => {
@@ -36,6 +46,10 @@ export default function TabTwoScreen() {
 			setForms(res);
 		})
 		.catch(error => console.log(error))
+	}
+
+	if(post?.update == 'true'){
+		return <Redirect href="/appointmentForms" />;
 	}
 
 	return (
@@ -46,13 +60,14 @@ export default function TabTwoScreen() {
 						pathname: "/modalAppointmentForm",
 						params: { formData: JSON.stringify(form) }
 					}} 
-					asChild key={form.id}
+					asChild 
+					key={form.id}
 					style={styles.form}
 					>
 						<TouchableNativeFeedback>
 							<View style={styles.formContainer}>
 								<Text style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-									<Text style={styles.title}>{form.form_name}</Text>
+									<Text style={styles.title}>{form.id} - {form.form_name}</Text>
 									<Entypo name="chevron-small-right" size={24} color="black" />
 								</Text>
 								<Text style={{color: '#3c3c3c', marginTop: 'auto', marginLeft: 'auto'}}>
