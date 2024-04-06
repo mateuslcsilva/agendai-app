@@ -7,7 +7,7 @@ import { Text, View } from '@/components/Themed';
 import Colors from '@/constants/Colors';
 import { styles as globalStyles } from '@/styles/styles';
 import { NewAppointment } from '@/components/newAppointment/NewAppointment';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 interface initialState {
 	question: string,
@@ -35,23 +35,30 @@ const reducer = (state: initialState, action: action) => {
 };
 
 export default function ModalScreen() {
+    const post = useLocalSearchParams();
 	const [formId, setFormId] = useState<number | null>(null);
 	const [formName, setFormName] = useState('');
 	const [question, setQuestion] = useState('');
 	const [fieldType, setFieldType] = useState<'short' | 'long'>('short');
-	const [questions, setQuestions] = useState([] as initialState[]);
-
-	/* 	useEffect(() => {
-			console.log(question, fieldType);
-		}, [question, fieldType]) */
+	const [questions, setQuestions] = useState([] as Array<initialState>);
 
 	useEffect(() => {
-		console.log(questions);
-	}, [questions])
+		if(post?.formData && !formId){
+			//@ts-ignore
+			const form = JSON.parse(post?.formData);
+			console.log('form no post', form);
+			setFormName(form.form_name);
+			setFormId(form.id);
+			const getInfo = async() => {
+				await getItemsAppointmentForms(form.id);
+			}
+			getInfo();
+		}
+	}, [post])
 
-	/* 	const updateFieldValue = (field : string) => (event : any) => {
-			dispatch({ type: "updateFieldValue", field, value: event.target.value });
-		}; */
+/* 	useEffect(() => {
+		console.log(questions);
+	}, [questions]) */
 
 	const addInputField = () => {
 		setQuestions([...questions, { question: question, type: fieldType }]);
@@ -71,9 +78,9 @@ export default function ModalScreen() {
 			},
 			body: JSON.stringify(data)
 		};
-		console.log(data)
-		return;
-		await fetch(`http://127.0.0.1:3000/getAppointments`, requestOptions)
+		console.log('data do formulário', data)
+		
+		await fetch(`https://lcsilva.cloud/saveAppointmentForm`, requestOptions)
 			.then(res => res.json())
 			.then(res => {
 				console.log(res)
@@ -81,11 +88,29 @@ export default function ModalScreen() {
 					'Formulário salvo com sucesso!!', 
 					ToastAndroid.LONG
 				);
+				resetStates();
 				router.push('/appointmentForms');
 			})
 			.catch(error => {
 				console.log(error)
 			});
+	}
+
+	const getItemsAppointmentForms = async(formId = null) => {
+		await fetch(`https://lcsilva.cloud/getItemsAppointmentForms/${formId}`) 
+		.then(res => res.json())
+		.then((res) => {
+			console.log('getItemsAppointmentForms', res);
+			setQuestions(res);
+		})
+		.catch(error => console.log(error))
+	}
+
+	const resetStates = () => {
+		setFormName('');
+		setFieldType('short');
+		setQuestion('');
+		setQuestions([] as Array<initialState>);
 	}
 
 	return (
