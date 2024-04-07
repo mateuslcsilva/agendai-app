@@ -32,7 +32,7 @@ export default function TabLayout() {
           title: 'Agendamentos',
           tabBarIcon: ({ color }) => <Ionicons name="calendar-number-outline" size={24} color={color} />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/modalUserInfo" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -50,7 +50,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="appointmentForms"
         options={{
-          title: 'Formulários',
+          title: 'Formulários', 
+          unmountOnBlur: true,
           tabBarIcon: ({ color }) => <Ionicons name="clipboard-outline" size={24} color={color} />,
           headerRight: () => (
             <Link href="/modalAppointmentForm" asChild>

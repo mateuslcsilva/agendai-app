@@ -1,20 +1,27 @@
 import { StyleSheet } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import Colors from '@/constants/Colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
+import { createTables, selectFirst } from '@/database/database';
 
 export default function Dashboard() {
 	const post = useLocalSearchParams();
 	const [userId, setUserId] = useState<number | null>(null);
 
-	if(!userId){
-		if(post?.userId){
-			setUserId(Number(post.userId));
-			router.setParams({});
+	useEffect(() => {
+		const getUser = async() => {
+			const userId = SecureStore.getItem('userId');
+			if(userId) setUserId(Number(userId))
+			console.log('userId', userId)
 		}
+		getUser();
+	}, [])
+
+	if(!userId){
 		return <Redirect href="/modal" />;
 	}
 

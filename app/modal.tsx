@@ -1,15 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { Keyboard, Platform, StyleSheet, TextInput, ToastAndroid, TouchableNativeFeedback } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Colors from '@/constants/Colors';
 
 const validEmailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
 export default function ModalScreen() {
+	const [loggedIn, setLoggedIn] = useState(false);
 	const [signIn, setSignIn] = useState(false);
 	const [signInName, setSignInName] = useState('');
 	const [signInEmail, setSignInEmail] = useState('');
@@ -18,6 +20,15 @@ export default function ModalScreen() {
 	const [signInPasswordConfirm, setSignInPasswordConfirm] = useState('');
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
+
+	useEffect(() => {
+		const getUser = async() => {
+			const userId = SecureStore.getItem('userId');
+			if(userId) setLoggedIn(true);
+			console.log('userId', userId)
+		}
+		getUser();
+	}, [])
 	
 	useEffect(() => {
 		setSignInPhone(signInPhone => phoneMask(signInPhone))
@@ -35,19 +46,15 @@ export default function ModalScreen() {
 
 		await fetch(`https://lcsilva.cloud/authUser`, requestOptions)
 			.then(res => res.json())
-			.then(res => {
-				console.log(res)
+			.then((res) => {
+				console.log('res na login', res)
 				ToastAndroid.show(
 					res.message,
 					ToastAndroid.LONG
 				);
 				if(res.status != 200) return false;
-				router.replace({
-					pathname: '/',
-					params: {
-						userId: res.userId
-					}
-				});
+				SecureStore.setItem('userId', res.userId.toString())
+				router.replace('/');
 			})
 			.catch(error => {
 				console.log(error)
@@ -75,12 +82,11 @@ export default function ModalScreen() {
 		await fetch(`https://lcsilva.cloud/saveUser`, requestOptions)
 			.then(res => res.json())
 			.then(res => {
-				router.replace({
-					pathname: '/',
-					params: {
-						userId: res.userId
-					}
-				});
+				ToastAndroid.show(
+					res.message,
+					ToastAndroid.LONG
+				);
+				router.replace('/');
 			})
 			.catch(error => {
 				console.log(error)
@@ -104,6 +110,7 @@ export default function ModalScreen() {
 
 	return (
 		<View style={styles.container}>
+			{loggedIn && <Redirect href='/' />}
 			{!signIn && (
 				<>
 					<View style={styles.textContainer}>

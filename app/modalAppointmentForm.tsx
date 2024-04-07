@@ -163,9 +163,9 @@ export default function ModalScreen() {
 				<View style={{ display: 'flex', gap: 12, marginTop: 12 }}>
 					<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 						<Text style={[globalStyles.title, { color: '#3c3c3c' }]}>Nome do formulário</Text>
-						<TouchableNativeFeedback style={{ marginLeft: 'auto' }} onPress={confirmDeleteForm}>
+						{formId && <TouchableNativeFeedback style={{ marginLeft: 'auto' }} onPress={confirmDeleteForm}>
 							<Ionicons name="trash-outline" size={24} color="#EE4B2B" />
-						</TouchableNativeFeedback>
+						</TouchableNativeFeedback>}
 					</View>
 					<TextInput
 						cursorColor={Colors.primaryFontLightColor.color}

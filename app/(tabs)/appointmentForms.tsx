@@ -8,8 +8,6 @@ import { Entypo } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { Link, Redirect, router, useLocalSearchParams } from 'expo-router';
 
-//const mockupData = [{ "id": 1, "created_at": "2024-03-23T03:00:00.000Z", "form_name": 'form name', "numberOfQuestions": 0 }, { "id": 2, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 3, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 4, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 5, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 6, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 7, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 8, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 9, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 10, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 1 }, { "id": 11, "created_at": null, "form_name": "teste nome form", "numberOfQuestions": 1 }, { "id": 12, "created_at": "2024-03-23T16:33:03.000Z", "form_name": "teste nome form", "numberOfQuestions": 0 }, { "id": 13, "created_at": "2024-03-23T16:33:57.000Z", "form_name": "teste nome form", "numberOfQuestions": 3 }];
-
 interface AppointmentForm{
 	id: number,
 	created_at: string,
@@ -20,17 +18,7 @@ interface AppointmentForm{
 export default function TabTwoScreen() {
 	const post = useLocalSearchParams();
 	const [forms, setForms] = useState<Array<AppointmentForm>>([] as Array<AppointmentForm>);
-
-/* 	useEffect(() => {
-		const getInfo = async() => {
-			await getAppointmentForms();
-		}
-		if(post?.update == 'true'){
-			router.setParams({update: 'false'})
-			getInfo();
-		}
-	}, [post]) */
-
+	
 	useEffect(() => {
 		const getInfo = async() => {
 			await getAppointmentForms();
